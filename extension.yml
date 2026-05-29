@@ -6,8 +6,8 @@ extension:
   version: "1.0.0"
   description: "Multi-site aware specify command with per-site spec folders, auto-increment, and Drupal support"
   author: "spec-kit-multi-sites contributors"
-  repository: "https://github.com/your-org/spec-kit-multi-sites"
-  homepage: "https://github.com/your-org/spec-kit-multi-sites"
+  repository: "https://github.com/teeyo/spec-kit-multi-sites"
+  homepage: "https://github.com/teeyo/spec-kit-multi-sites"
   license: "MIT"
 
 requires:
