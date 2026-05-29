@@ -1,0 +1,26 @@
+schema_version: "1.0"
+
+extension:
+  id: "spec-kit-multi-sites"
+  name: "Multi-Sites Spec Kit"
+  version: "1.0.0"
+  description: "Multi-site aware specify command with per-site spec folders, auto-increment, and Drupal support"
+  author: "spec-kit-multi-sites contributors"
+  repository: "https://github.com/your-org/spec-kit-multi-sites"
+  homepage: "https://github.com/your-org/spec-kit-multi-sites"
+  license: "MIT"
+
+requires:
+  speckit_version: ">=0.1.0"
+
+provides:
+  commands:
+    - name: "speckit.multisite.specify"
+      file: "commands/specify.md"
+      description: "Create a spec in the right site or core folder with per-site auto-incremented numbering"
+
+tags:
+  - "multi-site"
+  - "drupal"
+  - "workflow"
+  - "process"

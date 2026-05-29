@@ -1,0 +1,32 @@
+# spec-kit-multi-sites configuration template
+#
+# Copy this file to spec-kit-multi-sites-config.yml to activate project-level config:
+#
+#   cp .specify/extensions/spec-kit-multi-sites/spec-kit-multi-sites-config.template.yml \
+#      .specify/extensions/spec-kit-multi-sites/spec-kit-multi-sites-config.yml
+#
+# All keys are optional. The command falls back to interactive prompts for any key
+# that is commented out or left blank.
+
+# sites_folder:
+#   Override the auto-detected sites folder path (relative to project root).
+#   Leave commented to use auto-detection.
+#   Examples:
+#     sites_folder: "docroot/sites"
+#     sites_folder: "web/sites"
+#     sites_folder: "apps"
+# sites_folder: ""
+
+# spec_mode:
+#   Lock in a spec organisation mode so the command never asks.
+#   Valid values: "targeted" | "single"
+#   Leave commented to ask every time.
+# spec_mode: ""
+
+# excluded_sites:
+#   Sub-directory names inside the sites folder to exclude from the target list.
+#   The "core" option is always added automatically and is never excluded here.
+#   Default: ["all", "default"]
+excluded_sites:
+  - "all"
+  - "default"
