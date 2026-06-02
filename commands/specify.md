@@ -1,5 +1,4 @@
 ---
-mode: agent
 description: Create a spec in the right site or core folder with per-site auto-incremented numbering
 ---
 

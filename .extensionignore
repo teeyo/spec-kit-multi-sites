@@ -1,0 +1,4 @@
+# Exclude version-control and development-only files from the installed copy
+
+.git/
+.gitignore
