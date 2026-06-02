@@ -5,7 +5,9 @@ description: Create a spec in the right site or core folder with per-site auto-i
 
 # speckit.spec-kit-multi-sites.specify
 
-You are running the **Multi-Sites Specify** command. This is a multi-site-aware replacement for `/speckit.specify`. Follow every step below exactly and in order. Do not skip steps. Do not proceed to a later step until the user has responded to the current one.
+You are running the **Multi-Sites Specify** command. This is a multi-site-aware replacement for `/speckit.specify`. Follow every step below exactly and in order. Do not skip steps. Do not proceed to a later step until the previous step is complete.
+
+**Important:** Whenever you need input from the user, always use the `vscode_askQuestions` tool to present a VS Code quick-pick or input box UI. Never ask the user to type answers directly in the chat.
 
 ---
 
@@ -19,20 +21,27 @@ Apply the following detection rules, in priority order:
 2. **Generic CMS / framework** — look for any folder named `sites/`, `webs/`, `domains/`, `tenants/`, `apps/`, or `vhosts/` at the root or one level deep that contains at least two sub-directories.
 3. **Custom** — if no candidate is found automatically, set `detected_sites_folder` to `null`.
 
-After running the scan, present the result to the user like this:
+Use `vscode_askQuestions` to confirm the detected folder with the user. Build the options list as follows:
 
----
+- If a folder was detected, include it as the first option marked as recommended.
+- Always include an "Enter manually" option at the end.
 
-**Sites folder detection**
+Example call structure:
+```
+vscode_askQuestions({
+  questions: [{
+    header: "sites_folder",
+    question: "Which folder contains your website sub-folders?",
+    options: [
+      { label: "<detected_sites_folder>", description: "Auto-detected", recommended: true },
+      { label: "Enter manually", description: "Type a custom path" }
+    ]
+  }]
+})
+```
 
-> I analysed the project structure and found: **`<detected_sites_folder>`** *(or "no sites folder detected" if null)*
-
-Please confirm or provide the correct path:
-
-- If the suggestion is correct, just press **Enter** or type `yes`.
-- Otherwise, type the correct path relative to the project root (e.g. `docroot/sites`).
-
----
+- If the user selects "Enter manually", call `vscode_askQuestions` again with a free-text question (no options) to collect the path.
+- If no folder was detected, call `vscode_askQuestions` directly with a free-text question asking for the path.
 
 Store the confirmed value as `$SITES_FOLDER`.
 
@@ -40,25 +49,32 @@ Store the confirmed value as `$SITES_FOLDER`.
 
 ## STEP 2 — Choose the Spec Mode
 
-Ask the user to choose how specs should be organised:
+Use `vscode_askQuestions` to ask the user to choose the spec organisation mode:
 
----
+```
+vscode_askQuestions({
+  questions: [{
+    header: "spec_mode",
+    question: "How would you like to organise your specs?",
+    options: [
+      {
+        label: "Targeted specs",
+        description: "Each site has its own specs/ folder with independent numbering (recommended for large multi-site projects)",
+        recommended: true
+      },
+      {
+        label: "Single specs",
+        description: "All specs share a root specs/ folder; site name is embedded in the file name"
+      }
+    ],
+    allowFreeformInput: false
+  }]
+})
+```
 
-**Spec mode selection**
+Map the selection: "Targeted specs" → `targeted`, "Single specs" → `single`.
 
-How would you like to organise your specs?
-
-**1 — Targeted specs** *(recommended for large multi-site projects)*
-Each website has its own `specs/` folder inside it. Auto-increment numbers are independent per website (`websiteA/specs/001-…`, `websiteA/specs/002-…` vs `websiteB/specs/001-…`). Core specs live in a root-level `specs/` folder with their own independent counter.
-
-**2 — Single specs**
-All specs share one `specs/` folder at the root level. The website or core name is embedded in the file name so each scope has its own independent counter (`001-core-…`, `001-websiteA-…`, `001-websiteB-…`).
-
-Type `1` or `2` (or the full label).
-
----
-
-Store the choice as `$SPEC_MODE` (value: `targeted` or `single`).
+Store the choice as `$SPEC_MODE`.
 
 ---
 
@@ -66,24 +82,23 @@ Store the choice as `$SPEC_MODE` (value: `targeted` or `single`).
 
 List the immediate sub-directories inside `$SITES_FOLDER`. Exclude any directory named `all`, `default`, `.git`, `node_modules`, or any file (not folder). Sort alphabetically.
 
-Also add a special option called **`core`** at the top of the list.
+Use `vscode_askQuestions` to present the target list. Build the options dynamically:
 
-Present the options like this:
-
----
-
-**Target selection**
-
-Where should this spec be created?
-
-- `core` — shared core feature (top-level, applies to all websites)
-- `<website-1>`
-- `<website-2>`
-- *(… all sub-directories found …)*
-
-Type the name of the target.
-
----
+```
+vscode_askQuestions({
+  questions: [{
+    header: "target",
+    question: "Where should this spec be created?",
+    options: [
+      { label: "core", description: "Shared core feature — top-level, applies to all websites" },
+      { label: "<website-1>", description: "$SITES_FOLDER/<website-1>" },
+      { label: "<website-2>", description: "$SITES_FOLDER/<website-2>" },
+      // ... one entry per detected sub-directory
+    ],
+    allowFreeformInput: false
+  }]
+})
+```
 
 Store the answer as `$TARGET`.
 
@@ -119,15 +134,17 @@ In both modes, format `$NEXT_NUM` as a zero-padded 3-digit string (e.g. `1` → 
 
 ## STEP 5 — Ask for the Feature Name
 
-Ask the user:
+Use `vscode_askQuestions` to ask for the feature name with a free-text input:
 
----
-
-**Feature name**
-
-What is the name of this feature? *(Use lowercase words separated by hyphens, e.g. `user-authentication`, `product-catalog`)*
-
----
+```
+vscode_askQuestions({
+  questions: [{
+    header: "feature_name",
+    question: "What is the name of this feature?",
+    message: "Use lowercase words separated by hyphens, e.g. `user-authentication`, `product-catalog`"
+  }]
+})
+```
 
 Store the answer as `$FEATURE_NAME`. Normalise it: lowercase, replace spaces with hyphens, remove any characters that are not alphanumeric or hyphens.
 
@@ -140,29 +157,31 @@ Compute:
 - If `$SPEC_MODE` is `targeted`:
   - `$SPEC_FILENAME` = `$NEXT_NUM-$FEATURE_NAME.md`
   - `$SPEC_PATH` = `$SPEC_DIR/$SPEC_FILENAME`
-  - `$BRANCH_NAME` = `$NEXT_NUM-$FEATURE_NAME` *(for targeted mode, no scope prefix in branch)*
+  - `$BRANCH_NAME` = `$NEXT_NUM-$FEATURE_NAME`
 
 - If `$SPEC_MODE` is `single`:
   - `$SPEC_FILENAME` = `$NEXT_NUM-$TARGET-$FEATURE_NAME.md`
   - `$SPEC_PATH` = `$SPEC_DIR/$SPEC_FILENAME`
   - `$BRANCH_NAME` = `$NEXT_NUM-$TARGET-$FEATURE_NAME`
 
-Show a summary to the user before creating anything:
+Use `vscode_askQuestions` to show a confirmation prompt before creating anything:
 
----
+```
+vscode_askQuestions({
+  questions: [{
+    header: "confirm",
+    question: "Ready to create the spec — confirm the details below:",
+    message: "**Mode:** `$SPEC_MODE` | **Target:** `$TARGET` | **File:** `$SPEC_PATH` | **Branch:** `$BRANCH_NAME`",
+    options: [
+      { label: "Create spec", recommended: true },
+      { label: "Cancel" }
+    ],
+    allowFreeformInput: false
+  }]
+})
+```
 
-**Summary — about to create**
-
-| Field          | Value                      |
-|----------------|----------------------------|
-| Mode           | `$SPEC_MODE`               |
-| Target         | `$TARGET`                  |
-| Specs folder   | `$SPEC_DIR`                |
-| Spec file      | `$SPEC_FILENAME`           |
-| Full path      | `$SPEC_PATH`               |
-| Git branch     | `$BRANCH_NAME`             |
-
-Proceed? Type `yes` to create the spec, or `no` to cancel.
+If the user selects "Cancel", stop here with a friendly message.
 
 ---
 
