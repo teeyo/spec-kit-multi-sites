@@ -53,6 +53,22 @@ Or install from a local checkout during development:
 specify extension add --dev /path/to/spec-kit-multi-sites
 ```
 
+### Known: installer creates symlinks
+
+The `specify extension add` command installs extensions using `ln -s` (symlinks) rather than copying files. This means the extension resolves at runtime through the symlink, which is normally fine — but if the global Spec Kit store is cleaned up, updated, or moved, the symlink may break silently.
+
+This behaviour repeats on every update or reinstall. If you find commands fail to load after an update, replace the symlink with a real copy:
+
+```bash
+# Run from the project root
+EXT_DIR=".specify/extensions/spec-kit-multi-sites"
+cp -rL "$EXT_DIR" "${EXT_DIR}-copy"
+rm "$EXT_DIR"
+mv "${EXT_DIR}-copy" "$EXT_DIR"
+```
+
+> **Tip:** If you want real files from the start, install from a local checkout with `--dev` (see above) and then copy the folder manually — the `--dev` flag already resolves to your local path, so a plain `cp -r` of the checkout is sufficient.
+
 ## Usage
 
 In your AI coding agent's chat, run:
