@@ -11,7 +11,13 @@ You are running the **Multi-Sites Specify** command. This is a multi-site-aware 
 
 ---
 
-## STEP 1 — Detect the Sites Folder
+## STEP 1 — Load or Detect the Sites Folder
+
+**First**, check whether the project already has a saved config by reading the file at:
+`.specify/extensions/spec-kit-multi-sites/spec-kit-multi-sites-config.yml`
+
+- If the file exists **and** contains a non-empty `sites_folder` value, set `$SITES_FOLDER` to that value and **skip the rest of this step** — do not ask the user anything.
+- Otherwise, continue below.
 
 Scan the project's directory structure to find the folder that contains the individual website sub-folders.
 
@@ -26,7 +32,6 @@ Use `vscode_askQuestions` to confirm the detected folder with the user. Build th
 - If a folder was detected, include it as the first option marked as recommended.
 - Always include an "Enter manually" option at the end.
 
-Example call structure:
 ```
 vscode_askQuestions({
   questions: [{
@@ -45,9 +50,21 @@ vscode_askQuestions({
 
 Store the confirmed value as `$SITES_FOLDER`.
 
+**After confirming**, persist the value so this question is never asked again for this project:
+- If `.specify/extensions/spec-kit-multi-sites/spec-kit-multi-sites-config.yml` does not exist, create it with the content:
+  ```yaml
+  sites_folder: "$SITES_FOLDER"
+  ```
+- If it already exists but `sites_folder` is blank or commented out, update that line to set `sites_folder: "$SITES_FOLDER"`.
+
 ---
 
-## STEP 2 — Choose the Spec Mode
+## STEP 2 — Load or Choose the Spec Mode
+
+**First**, check `.specify/extensions/spec-kit-multi-sites/spec-kit-multi-sites-config.yml`:
+
+- If the file exists **and** contains a non-empty `spec_mode` value of either `targeted` or `single`, set `$SPEC_MODE` to that value and **skip the rest of this step** — do not ask the user anything.
+- Otherwise, continue below.
 
 Use `vscode_askQuestions` to ask the user to choose the spec organisation mode:
 
@@ -75,6 +92,10 @@ vscode_askQuestions({
 Map the selection: "Targeted specs" → `targeted`, "Single specs" → `single`.
 
 Store the choice as `$SPEC_MODE`.
+
+**After confirming**, persist the value to `.specify/extensions/spec-kit-multi-sites/spec-kit-multi-sites-config.yml`:
+- If `spec_mode` is already a line in the file (even commented out), update it to `spec_mode: "$SPEC_MODE"`.
+- If the line does not exist, append `spec_mode: "$SPEC_MODE"` to the file.
 
 ---
 
