@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] — 2026-06-02
+
+### Added
+
+- `speckit.spec-kit-multi-sites.clarify` command — reviews a spec file, identifies empty sections, vague acceptance criteria, incomplete user stories, and unresolved open questions; collects answers from the user via quick-pick and updates the file in place
+- `speckit.spec-kit-multi-sites.checklist` command — evaluates a spec against an 8-point readiness checklist (Overview, Goals, Non-Goals, User Stories, Acceptance Criteria, Open Questions, Target, Technical Notes) and reports pass/partial/fail per criterion
+- `speckit.spec-kit-multi-sites.plan` command — generates a structured technical implementation plan (Summary, Architecture, Implementation Steps, File Changes, Dependencies, Testing Strategy, Risks, Open Questions) saved as a companion `*-plan.md` file next to the spec
+
+### Changed
+
+- `commands/specify.md` Step 8 next-steps now references the three new multi-site-aware commands (`clarify`, `checklist`, `plan`) instead of the generic `speckit.clarify` / `speckit.plan`
+- README Workflow Integration section expanded with a command reference table explaining each command's purpose
+
 ## [1.3.1] — 2026-06-02
 
 ### Fixed

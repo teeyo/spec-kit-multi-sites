@@ -290,8 +290,9 @@ After creating the file, print:
 
 **Next steps:**
 1. Open `$SPEC_PATH` and fill in the spec details.
-2. When ready, run `/speckit.clarify` to resolve ambiguities.
-3. Then run `/speckit.plan` to generate the technical plan.
+2. Run `/speckit.spec-kit-multi-sites.clarify` to review the spec and resolve any ambiguities or gaps.
+3. Run `/speckit.spec-kit-multi-sites.checklist` to verify the spec is implementation-ready.
+4. Run `/speckit.spec-kit-multi-sites.plan` to generate the technical implementation plan.
 
 *Tip: To switch to a new Git branch for this feature, run:*
 ```

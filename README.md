@@ -195,12 +195,23 @@ Every generated spec follows the standard Spec Kit structure:
 
 ## Workflow Integration
 
-After creating a spec with this extension, continue the standard Spec Kit workflow:
+All workflow commands are multi-site-aware — they read the saved config, ask which site (or core) you are working on, and scope all file operations to the correct `specs/` folder for that target.
 
 ```
-/speckit.spec-kit-multi-sites.specify  →  /speckit.clarify  →  /speckit.checklist
-  →  /speckit.plan  →  /speckit.tasks  →  /speckit.analyze  →  /speckit.implement
+/speckit.spec-kit-multi-sites.specify
+  → /speckit.spec-kit-multi-sites.clarify
+  → /speckit.spec-kit-multi-sites.checklist
+  → /speckit.spec-kit-multi-sites.plan
 ```
+
+| Command | Purpose |
+|---------|--------|
+| `speckit.spec-kit-multi-sites.specify` | Create a new spec in the correct site or core folder with auto-incremented numbering |
+| `speckit.spec-kit-multi-sites.clarify` | Review a spec and resolve ambiguities, gaps, and open questions interactively |
+| `speckit.spec-kit-multi-sites.checklist` | Evaluate a spec against a readiness checklist before planning |
+| `speckit.spec-kit-multi-sites.plan` | Generate a technical implementation plan and save it as a companion `*-plan.md` file |
+
+Every command after `specify` starts by loading the saved config (`sites_folder`, `spec_mode`), asking which target to work on, and listing the available spec files for that target — so you never have to re-configure the project and always work in the right scope.
 
 ## License
 
