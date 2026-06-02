@@ -3,7 +3,7 @@ schema_version: "1.0"
 extension:
   id: "spec-kit-multi-sites"
   name: "Multi-Sites Spec Kit"
-  version: "1.0.0"
+  version: "1.1.0"
   description: "Multi-site aware specify command with per-site spec folders, auto-increment, and Drupal support"
   author: "spec-kit-multi-sites contributors"
   repository: "https://github.com/teeyo/spec-kit-multi-sites"
@@ -15,7 +15,7 @@ requires:
 
 provides:
   commands:
-    - name: "speckit.multisite.specify"
+    - name: "speckit.spec-kit-multi-sites.specify"
       file: "commands/specify.md"
       description: "Create a spec in the right site or core folder with per-site auto-incremented numbering"
 

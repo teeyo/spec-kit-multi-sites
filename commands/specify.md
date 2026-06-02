@@ -1,4 +1,9 @@
-# speckit.multisite.specify
+---
+mode: agent
+description: Create a spec in the right site or core folder with per-site auto-incremented numbering
+---
+
+# speckit.spec-kit-multi-sites.specify
 
 You are running the **Multi-Sites Specify** command. This is a multi-site-aware replacement for `/speckit.specify`. Follow every step below exactly and in order. Do not skip steps. Do not proceed to a later step until the user has responded to the current one.
 

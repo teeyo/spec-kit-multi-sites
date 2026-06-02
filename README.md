@@ -58,7 +58,7 @@ specify extension add --dev /path/to/spec-kit-multi-sites
 In your AI coding agent's chat, run:
 
 ```
-/speckit.multisite.specify
+/speckit.spec-kit-multi-sites.specify
 ```
 
 The command walks you through an interactive flow:
@@ -117,7 +117,7 @@ Every generated spec follows the standard Spec Kit structure:
 After creating a spec with this extension, continue the standard Spec Kit workflow:
 
 ```
-/speckit.multisite.specify  →  /speckit.clarify  →  /speckit.checklist
+/speckit.spec-kit-multi-sites.specify  →  /speckit.clarify  →  /speckit.checklist
   →  /speckit.plan  →  /speckit.tasks  →  /speckit.analyze  →  /speckit.implement
 ```
 
