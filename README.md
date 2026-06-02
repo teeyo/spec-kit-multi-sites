@@ -61,14 +61,95 @@ In your AI coding agent's chat, run:
 /speckit.spec-kit-multi-sites.specify
 ```
 
-The command walks you through an interactive flow:
+The command walks you through an interactive flow using VS Code quick-pick prompts. Steps 1 and 2 are only asked **once** — the answers are saved to your project config and reused on every subsequent run.
 
-1. **Sites folder** — confirms or lets you override the detected folder.
-2. **Spec mode** — choose `targeted` or `single`.
-3. **Target** — pick `core` or one of the detected website names.
-4. **Feature name** — describe what you are building.
-5. **Confirmation** — preview the path and branch name before anything is written.
-6. **Spec file created** — a standard spec template is placed in the correct location.
+---
+
+### Step 1 — Sites folder *(first run only)*
+
+A quick-pick shows the auto-detected folder. Confirm it or choose "Enter manually" to type a custom path.
+
+```
+Which folder contains your website sub-folders?
+❯ docroot/sites   (Auto-detected)
+  Enter manually
+```
+
+> On a Drupal project the command detects `docroot/sites` automatically. On a generic multi-site setup it may detect `sites/`, `apps/`, `tenants/`, etc.
+
+---
+
+### Step 2 — Spec mode *(first run only)*
+
+Choose how specs are organised across sites.
+
+```
+How would you like to organise your specs?
+❯ Targeted specs   Each site has its own specs/ folder with independent numbering
+  Single specs     All specs share a root specs/ folder; site name is in the file name
+```
+
+Both choices are persisted to `.specify/extensions/spec-kit-multi-sites/spec-kit-multi-sites-config.yml` so you are never asked again.
+
+---
+
+### Step 3 — Target site
+
+Pick the site (or `core`) this spec belongs to. The list is built from sub-directories found inside your sites folder.
+
+```
+Where should this spec be created?
+❯ core            Shared core feature — top-level, applies to all websites
+  website-alpha   docroot/sites/website-alpha
+  website-beta    docroot/sites/website-beta
+  website-gamma   docroot/sites/website-gamma
+```
+
+---
+
+### Step 4 — Feature name
+
+Type a short description of the feature. Spaces are converted to hyphens automatically.
+
+```
+What is the name of this feature?
+> user authentication
+```
+
+> Normalised to `user-authentication`.
+
+---
+
+### Step 5 — Confirmation
+
+Review the computed path and branch name before anything is written to disk.
+
+```
+Ready to create the spec — confirm the details below:
+Mode: targeted | Target: website-alpha | File: docroot/sites/website-alpha/specs/001-user-authentication.md | Branch: 001-user-authentication
+
+❯ Create spec
+  Cancel
+```
+
+---
+
+### Step 6 — Spec file created
+
+The spec file is created at the computed path using the standard Spec Kit template.
+
+```
+✅ Spec created successfully!
+
+File:   docroot/sites/website-alpha/specs/001-user-authentication.md
+Target: website-alpha
+Mode:   targeted
+
+Next steps:
+1. Open the file and fill in the spec details.
+2. Run /speckit.clarify to resolve ambiguities.
+3. Run /speckit.plan to generate the technical plan.
+```
 
 ## Folder Detection
 
