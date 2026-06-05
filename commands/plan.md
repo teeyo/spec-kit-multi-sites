@@ -52,6 +52,9 @@ Store the answer as `$TARGET`.
 Compute `$SPEC_DIR` using the same rules as the specify command:
 
 - If `$SPEC_MODE` is `targeted`:
+Compute `$SPEC_DIR` using the same rules as the specify command:
+
+- If `$SPEC_MODE` is `targeted`:
   - If `$TARGET` is `core`: `$SPEC_DIR` = `specs/`
   - Otherwise: `$SPEC_DIR` = `$SITES_FOLDER/$TARGET/specs/`
 - If `$SPEC_MODE` is `single`: `$SPEC_DIR` = `specs/`
@@ -60,12 +63,12 @@ Compute `$SPEC_DIR` using the same rules as the specify command:
 
 ## STEP 3 — Choose Spec File
 
-List all `.md` files in `$SPEC_DIR` that match the following pattern (excluding plan files):
+List all available specs from `$SPEC_DIR`:
 
-- If `$SPEC_MODE` is `targeted`: files matching `NNN-*.md` but **not** ending in `-plan.md`
-- If `$SPEC_MODE` is `single`: files matching `NNN-<$TARGET>-*.md` but **not** ending in `-plan.md`
+- **New structure:** Find all sub-directories inside `$SPEC_DIR` matching `NNN-*` (if `$SPEC_MODE` is `targeted`) or `NNN-<$TARGET>-*` (if `$SPEC_MODE` is `single`) that contain a `spec.md` file. Show the directory name as the option label.
+- **Legacy structure:** Find all `.md` files directly in `$SPEC_DIR` matching `NNN-*.md` (if `$SPEC_MODE` is `targeted`) or `NNN-<$TARGET>-*.md` (if `$SPEC_MODE` is `single`) that do not end in `-plan.md`. Show the filename as the option label.
 
-Sort alphabetically. If no matching files are found, stop and tell the user:
+Sort all options alphabetically. If no matching directories or legacy files are found, stop and tell the user:
 
   > **No specs found** in `$SPEC_DIR`. Run `/speckit.spec-kit-multi-sites.specify` to create one first.
 
@@ -77,31 +80,47 @@ vscode_askQuestions({
     header: "spec_file",
     question: "Which spec would you like to plan?",
     options: [
-      { label: "<filename>", description: "$SPEC_DIR/<filename>" },
-      // ... one entry per found spec file
+      { label: "<name>", description: "$SPEC_DIR/<name>" },
+      // ... one entry per found spec (either the new directory name or the legacy filename)
     ],
     allowFreeformInput: false
   }]
 })
 ```
 
-Set `$SPEC_PATH` = `$SPEC_DIR/<selected filename>`. Read the file contents.
+Based on the selected option, check if it's a directory or a legacy file structure:
 
-Parse the selected filename to extract:
+- **If a directory (new structure):**
+  - Set `$FEATURE_DIR` = `$SPEC_DIR/<selected name>`
+  - Set `$SPEC_PATH` = `$FEATURE_DIR/spec.md`
+  - Parse the directory name `<selected name>` to extract:
+    - `$SPEC_NUM` — the leading zero-padded number (e.g. `001` from `001-user-authentication`)
+    - `$FEATURE_NAME` — the remainder after stripping the number prefix (and target prefix in single mode)
+      - targeted: `001-user-authentication` → `$FEATURE_NAME` = `user-authentication`
+      - single: `001-websiteA-user-authentication` → `$FEATURE_NAME` = `user-authentication`
 
-- `$SPEC_NUM` — the leading zero-padded number (e.g. `001` from `001-user-authentication.md`)
-- `$FEATURE_NAME` — the remainder after stripping the number prefix (and target prefix in single mode)
-  - targeted: `001-user-authentication.md` → `$FEATURE_NAME` = `user-authentication`
-  - single: `001-websiteA-user-authentication.md` → `$FEATURE_NAME` = `user-authentication`
+- **If a legacy file (legacy structure):**
+  - Set `$SPEC_PATH` = `$SPEC_DIR/<selected name>`
+  - Parse the filename to extract:
+    - `$SPEC_NUM` — the leading zero-padded number (e.g. `001` from `001-user-authentication.md`)
+    - `$FEATURE_NAME` — the remainder after stripping the number prefix (and target prefix in single mode)
+      - targeted: `001-user-authentication.md` → `$FEATURE_NAME` = `user-authentication`
+      - single: `001-websiteA-user-authentication.md` → `$FEATURE_NAME` = `user-authentication`
+
+Read the file contents at `$SPEC_PATH`.
 
 ---
 
 ## STEP 4 — Compute Plan File Path
 
-Derive the plan file path based on mode:
+Derive the plan file path:
 
-- If `$SPEC_MODE` is `targeted`: `$PLAN_PATH` = `$SPEC_DIR/$SPEC_NUM-$FEATURE_NAME-plan.md`
-- If `$SPEC_MODE` is `single`: `$PLAN_PATH` = `$SPEC_DIR/$SPEC_NUM-$TARGET-$FEATURE_NAME-plan.md`
+- **If using the new directory structure:**
+  - `$PLAN_PATH` = `$FEATURE_DIR/plan.md`
+
+- **If using the legacy file structure:**
+  - If `$SPEC_MODE` is `targeted`: `$PLAN_PATH` = `$SPEC_DIR/$SPEC_NUM-$FEATURE_NAME-plan.md`
+  - If `$SPEC_MODE` is `single`: `$PLAN_PATH` = `$SPEC_DIR/$SPEC_NUM-$TARGET-$FEATURE_NAME-plan.md`
 
 If a plan file already exists at `$PLAN_PATH`, ask:
 
@@ -207,7 +226,7 @@ Based on the full spec content (Overview, Goals, Non-Goals, User Stories, Accept
 
 ## STEP 7 — Save the Plan File
 
-Create the file at `$PLAN_PATH`. If `$SPEC_DIR` does not exist, create it (including any intermediate directories).
+Create the file at `$PLAN_PATH`. If the parent directory of `$PLAN_PATH` does not exist, create it (including any intermediate directories).
 
 ---
 

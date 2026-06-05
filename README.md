@@ -15,30 +15,41 @@ In multi-site projects (Drupal, custom CMS, monorepos with multiple web apps) ea
 
 ### Targeted Specs
 
-Each website has its own `specs/` folder inside its directory. Core specs go in a root-level `specs/` folder.
+Each website has its own `specs/` folder inside its directory. Core specs go in a root-level `specs/` folder. Every feature is placed in its own folder starting with the spec number, and uses clean filenames like `spec.md` and `plan.md` inside.
 
 ```
-specs/                          ← core specs (001-feature-a.md, 002-feature-b.md)
+specs/
+  001-feature-a/
+    spec.md                     ← core specs (spec.md, plan.md)
+    plan.md
 docroot/sites/
   websiteA/
-    specs/                      ← websiteA specs (001-login.md, 002-checkout.md)
+    specs/
+      001-login/
+        spec.md                 ← websiteA specs (spec.md, plan.md)
+        plan.md
   websiteB/
-    specs/                      ← websiteB specs (001-homepage.md)
+    specs/
+      001-homepage/
+        spec.md                 ← websiteB specs (spec.md)
 ```
 
 Auto-increment counters are fully independent: adding a spec to `websiteB` never affects `websiteA` or `core` counters.
 
 ### Single Specs
 
-All specs share one root-level `specs/` folder. The site name is part of the file name, making each scope's counter independent within that shared folder.
+All specs share one root-level `specs/` folder. The site name is part of the feature folder name, making each scope's counter independent within that shared folder. Inside each feature folder, files use clean names like `spec.md` and `plan.md`.
 
 ```
 specs/
-  001-core-auth.md
-  001-websiteA-login.md
-  001-websiteB-homepage.md
-  002-core-navigation.md
-  002-websiteA-checkout.md
+  001-core-auth/
+    spec.md
+    plan.md
+  001-websiteA-login/
+    spec.md
+    plan.md
+  001-websiteB-homepage/
+    spec.md
 ```
 
 ## Installation
@@ -142,7 +153,7 @@ Review the computed path and branch name before anything is written to disk.
 
 ```
 Ready to create the spec — confirm the details below:
-Mode: targeted | Target: website-alpha | File: docroot/sites/website-alpha/specs/001-user-authentication.md | Branch: 001-user-authentication
+Mode: targeted | Target: website-alpha | Folder: docroot/sites/website-alpha/specs/001-user-authentication | Branch: 001-user-authentication
 
 ❯ Create spec
   Cancel
@@ -157,14 +168,15 @@ The spec file is created at the computed path using the standard Spec Kit templa
 ```
 ✅ Spec created successfully!
 
-File:   docroot/sites/website-alpha/specs/001-user-authentication.md
+File:   docroot/sites/website-alpha/specs/001-user-authentication/spec.md
 Target: website-alpha
 Mode:   targeted
 
 Next steps:
 1. Open the file and fill in the spec details.
-2. Run /speckit.clarify to resolve ambiguities.
-3. Run /speckit.plan to generate the technical plan.
+2. Run /speckit.spec-kit-multi-sites.clarify to review the spec and resolve any ambiguities or gaps.
+3. Run /speckit.spec-kit-multi-sites.checklist to verify the spec is implementation-ready.
+4. Run /speckit.spec-kit-multi-sites.plan to generate the technical implementation plan.
 ```
 
 ## Folder Detection

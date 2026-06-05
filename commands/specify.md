@@ -132,21 +132,21 @@ Use the following logic to determine the next sequential number `$NEXT_NUM` for 
 
 - If `$TARGET` is `core`:
   - Look in `specs/` at the project root.
-  - Count all files whose name matches the pattern `NNN-*` (where `NNN` is a zero-padded 3-digit number).
-  - `$NEXT_NUM` = (count of matching files) + 1
+  - Count all items (directories or files) whose name starts with a zero-padded 3-digit number followed by a hyphen (`NNN-*`).
+  - `$NEXT_NUM` = (count of matching items) + 1
   - `$SPEC_DIR` = `specs/`
 
 - If `$TARGET` is a website name:
   - Look in `$SITES_FOLDER/$TARGET/specs/`.
-  - Count all files whose name matches the pattern `NNN-*`.
-  - `$NEXT_NUM` = (count of matching files) + 1
+  - Count all items (directories or files) whose name starts with a zero-padded 3-digit number followed by a hyphen (`NNN-*`).
+  - `$NEXT_NUM` = (count of matching items) + 1
   - `$SPEC_DIR` = `$SITES_FOLDER/$TARGET/specs/`
 
 ### If $SPEC_MODE is `single`:
 
 - `$SPEC_DIR` = `specs/` (always at project root)
-- Scan all files in `specs/` whose name matches `NNN-<$TARGET>-*` (case-insensitive).
-- `$NEXT_NUM` = (count of those matching files) + 1
+- Scan all items (directories or files) in `specs/` whose name starts with a zero-padded 3-digit number followed by a hyphen, then `$TARGET`, then another hyphen (e.g. `NNN-<$TARGET>-*` case-insensitive).
+- `$NEXT_NUM` = (count of those matching items) + 1
 
 In both modes, format `$NEXT_NUM` as a zero-padded 3-digit string (e.g. `1` → `001`, `12` → `012`).
 
@@ -175,13 +175,15 @@ Store the answer as `$FEATURE_NAME`. Normalise it: lowercase, replace spaces wit
 Compute:
 
 - If `$SPEC_MODE` is `targeted`:
-  - `$SPEC_FILENAME` = `$NEXT_NUM-$FEATURE_NAME.md`
-  - `$SPEC_PATH` = `$SPEC_DIR/$SPEC_FILENAME`
+  - `$FEATURE_DIRNAME` = `$NEXT_NUM-$FEATURE_NAME`
+  - `$FEATURE_DIR` = `$SPEC_DIR/$FEATURE_DIRNAME`
+  - `$SPEC_PATH` = `$FEATURE_DIR/spec.md`
   - `$BRANCH_NAME` = `$NEXT_NUM-$FEATURE_NAME`
 
 - If `$SPEC_MODE` is `single`:
-  - `$SPEC_FILENAME` = `$NEXT_NUM-$TARGET-$FEATURE_NAME.md`
-  - `$SPEC_PATH` = `$SPEC_DIR/$SPEC_FILENAME`
+  - `$FEATURE_DIRNAME` = `$NEXT_NUM-$TARGET-$FEATURE_NAME`
+  - `$FEATURE_DIR` = `$SPEC_DIR/$FEATURE_DIRNAME`
+  - `$SPEC_PATH` = `$FEATURE_DIR/spec.md`
   - `$BRANCH_NAME` = `$NEXT_NUM-$TARGET-$FEATURE_NAME`
 
 Use `vscode_askQuestions` to show a confirmation prompt before creating anything:
@@ -191,7 +193,7 @@ vscode_askQuestions({
   questions: [{
     header: "confirm",
     question: "Ready to create the spec — confirm the details below:",
-    message: "**Mode:** `$SPEC_MODE` | **Target:** `$TARGET` | **File:** `$SPEC_PATH` | **Branch:** `$BRANCH_NAME`",
+    message: "**Mode:** `$SPEC_MODE` | **Target:** `$TARGET` | **Folder:** `$FEATURE_DIR` | **Branch:** `$BRANCH_NAME`",
     options: [
       { label: "Create spec", recommended: true },
       { label: "Cancel" }
@@ -211,7 +213,7 @@ If the user answers `no`, stop here with a friendly message.
 
 ## STEP 7 — Create the Spec Directory and File
 
-1. If `$SPEC_DIR` does not exist, create it (including any intermediate directories).
+1. If `$FEATURE_DIR` does not exist, create it (including any intermediate directories).
 2. Create the file `$SPEC_PATH` with the template below, substituting all `{{ }}` placeholders.
 
 ---
@@ -223,7 +225,7 @@ If the user answers `no`, stop here with a friendly message.
 
 **Target:** {{ $TARGET }}  
 **Spec mode:** {{ $SPEC_MODE }}  
-**Spec ID:** {{ $SPEC_FILENAME }}  
+**Spec ID:** {{ $FEATURE_DIRNAME }}  
 **Date:** {{ TODAY_DATE }}
 
 ---

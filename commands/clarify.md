@@ -60,12 +60,12 @@ Compute `$SPEC_DIR` using the same rules as the specify command:
 
 ## STEP 3 — Choose Spec File
 
-List all `.md` files in `$SPEC_DIR` that match the following pattern (excluding plan files):
+List all available specs from `$SPEC_DIR`:
 
-- If `$SPEC_MODE` is `targeted`: files matching `NNN-*.md` but **not** ending in `-plan.md`
-- If `$SPEC_MODE` is `single`: files matching `NNN-<$TARGET>-*.md` but **not** ending in `-plan.md`
+- **New structure:** Find all sub-directories inside `$SPEC_DIR` matching `NNN-*` (if `$SPEC_MODE` is `targeted`) or `NNN-<$TARGET>-*` (if `$SPEC_MODE` is `single`) that contain a `spec.md` file. For these, the spec file path is `$SPEC_DIR/<directory-name>/spec.md`. Show the directory name as the option label.
+- **Legacy structure:** Find all `.md` files directly in `$SPEC_DIR` matching `NNN-*.md` (if `$SPEC_MODE` is `targeted`) or `NNN-<$TARGET>-*.md` (if `$SPEC_MODE` is `single`) that do not end in `-plan.md`. For these, the spec file path is `$SPEC_DIR/<filename>`. Show the filename as the option label.
 
-Sort alphabetically. If no matching files are found, stop and tell the user:
+Sort all options alphabetically. If no matching directories or legacy files are found, stop and tell the user:
 
   > **No specs found** in `$SPEC_DIR`. Run `/speckit.spec-kit-multi-sites.specify` to create one first.
 
@@ -77,15 +77,15 @@ vscode_askQuestions({
     header: "spec_file",
     question: "Which spec would you like to clarify?",
     options: [
-      { label: "<filename>", description: "$SPEC_DIR/<filename>" },
-      // ... one entry per found spec file
+      { label: "<name>", description: "$SPEC_DIR/<name>" },
+      // ... one entry per found spec (either the new directory name or the legacy filename)
     ],
     allowFreeformInput: false
   }]
 })
 ```
 
-Set `$SPEC_PATH` = `$SPEC_DIR/<selected filename>`. Read the file contents.
+Set `$SPEC_PATH` to the full path of the selected spec file (either `$SPEC_DIR/<selected directory>/spec.md` or `$SPEC_DIR/<selected filename>`). Read the file contents.
 
 ---
 
