@@ -6,6 +6,18 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and
 
 ## [Unreleased]
 
+## [1.6.0] — 2026-06-05
+
+### Added
+
+- `speckit.spec-kit-multi-sites.research` command — conducts technical research and documentation for a spec.
+- `speckit.spec-kit-multi-sites.tasks` command — generates a granular implementation task list from the spec and plan.
+
+### Changed
+
+- Updated all commands to suggest the next logical step in the Spec Kit workflow.
+- Updated README to document the full 6-step workflow (`specify` -> `clarify` -> `checklist` -> `research` -> `plan` -> `tasks`).
+
 ## [1.5.0] — 2026-06-05
 
 ### Changed

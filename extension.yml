@@ -3,7 +3,7 @@ schema_version: "1.0"
 extension:
   id: "spec-kit-multi-sites"
   name: "Multi-Sites Spec Kit"
-  version: "1.5.0"
+  version: "1.6.0"
   description: "Multi-site aware specify command with per-site spec folders, auto-increment, and Drupal support"
   author: "spec-kit-multi-sites contributors"
   repository: "https://github.com/teeyo/spec-kit-multi-sites"
@@ -27,6 +27,12 @@ provides:
     - name: "speckit.spec-kit-multi-sites.plan"
       file: "commands/plan.md"
       description: "Generate a technical implementation plan from a multi-site spec and save it as a companion plan file"
+    - name: "speckit.spec-kit-multi-sites.research"
+      file: "commands/research.md"
+      description: "Perform technical research for a multi-site spec and save it as a companion research file"
+    - name: "speckit.spec-kit-multi-sites.tasks"
+      file: "commands/tasks.md"
+      description: "Generate a granular implementation task list from a multi-site spec and plan"
 
 tags:
   - "multi-site"

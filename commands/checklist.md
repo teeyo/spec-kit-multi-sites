@@ -122,7 +122,10 @@ Print the completed checklist table.
 
 - **File:** `$SPEC_PATH`
 
-**Next step:** Run `/speckit.spec-kit-multi-sites.plan` to generate the technical implementation plan.
+**Next steps:**
+1. Run `/speckit.spec-kit-multi-sites.research` to investigate technical unknowns (optional).
+2. Run `/speckit.spec-kit-multi-sites.plan` to generate the technical implementation plan.
+3. Run `/speckit.spec-kit-multi-sites.tasks` to generate a granular task list for development.
 
 ---
 

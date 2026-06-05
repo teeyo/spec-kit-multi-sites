@@ -294,7 +294,9 @@ After creating the file, print:
 1. Open `$SPEC_PATH` and fill in the spec details.
 2. Run `/speckit.spec-kit-multi-sites.clarify` to review the spec and resolve any ambiguities or gaps.
 3. Run `/speckit.spec-kit-multi-sites.checklist` to verify the spec is implementation-ready.
-4. Run `/speckit.spec-kit-multi-sites.plan` to generate the technical implementation plan.
+4. Run `/speckit.spec-kit-multi-sites.research` to investigate technical unknowns (optional).
+5. Run `/speckit.spec-kit-multi-sites.plan` to generate the technical implementation plan.
+6. Run `/speckit.spec-kit-multi-sites.tasks` to generate a granular task list for development.
 
 *Tip: To switch to a new Git branch for this feature, run:*
 ```

@@ -246,4 +246,5 @@ Print:
 **Next steps:**
 1. Open `$PLAN_PATH` and review the generated plan.
 2. Fill in any sections marked with `<!-- ... -->` that need your input.
-3. Implement the feature by working through the steps in the plan.
+3. Run `/speckit.spec-kit-multi-sites.tasks` to generate a granular task list for development.
+4. Implement the feature by working through the tasks.

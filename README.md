@@ -229,7 +229,9 @@ All workflow commands are multi-site-aware — they read the saved config, ask w
 /speckit.spec-kit-multi-sites.specify
   → /speckit.spec-kit-multi-sites.clarify
   → /speckit.spec-kit-multi-sites.checklist
+  → /speckit.spec-kit-multi-sites.research
   → /speckit.spec-kit-multi-sites.plan
+  → /speckit.spec-kit-multi-sites.tasks
 ```
 
 | Command | Purpose |
@@ -237,7 +239,9 @@ All workflow commands are multi-site-aware — they read the saved config, ask w
 | `speckit.spec-kit-multi-sites.specify` | Create a new spec in the correct site or core folder with auto-incremented numbering |
 | `speckit.spec-kit-multi-sites.clarify` | Review a spec and resolve ambiguities, gaps, and open questions interactively |
 | `speckit.spec-kit-multi-sites.checklist` | Evaluate a spec against a readiness checklist before planning |
-| `speckit.spec-kit-multi-sites.plan` | Generate a technical implementation plan and save it as a companion `*-plan.md` file |
+| `speckit.spec-kit-multi-sites.research` | Perform technical research and documentation for a spec |
+| `speckit.spec-kit-multi-sites.plan` | Generate a technical implementation plan and save it as a companion `plan.md` file |
+| `speckit.spec-kit-multi-sites.tasks` | Generate a granular implementation task list from the spec and plan |
 
 Every command after `specify` starts by loading the saved config (`sites_folder`, `spec_mode`), asking which target to work on, and listing the available spec files for that target — so you never have to re-configure the project and always work in the right scope.
 
