@@ -124,31 +124,58 @@ Store the answer as `$TARGET`.
 
 ---
 
-## STEP 4 — Compute the Next Spec Number
+## STEP 4 — Compute and Confirm the Next Spec Number
 
-Use the following logic to determine the next sequential number `$NEXT_NUM` for the chosen `$TARGET`:
+First, determine the search pattern and local directory:
 
-### If $SPEC_MODE is `targeted`:
+- If `$SPEC_MODE` is `targeted`:
+    - `$SPEC_DIR` = (`$TARGET` is `core`) ? `specs/` : `$SITES_FOLDER/$TARGET/specs/`
+    - Pattern: `[0-9][0-9][0-9]-*`
+- If `$SPEC_MODE` is `single`:
+    - `$SPEC_DIR` = `specs/`
+    - Pattern: `[0-9][0-9][0-9]-$TARGET-*`
 
-- If `$TARGET` is `core`:
-  - Look in `specs/` at the project root.
-  - Count all items (directories or files) whose name starts with a zero-padded 3-digit number followed by a hyphen (`NNN-*`).
-  - `$NEXT_NUM` = (count of matching items) + 1
-  - `$SPEC_DIR` = `specs/`
+### 4.1 — Detect Existing Prefixes
 
-- If `$TARGET` is a website name:
-  - Look in `$SITES_FOLDER/$TARGET/specs/`.
-  - Count all items (directories or files) whose name starts with a zero-padded 3-digit number followed by a hyphen (`NNN-*`).
-  - `$NEXT_NUM` = (count of matching items) + 1
-  - `$SPEC_DIR` = `$SITES_FOLDER/$TARGET/specs/`
+Try to collect all existing 3-digit prefixes from two sources:
 
-### If $SPEC_MODE is `single`:
+1. **Remote Branches:** Run `git branch -r`. Look for branch names that end with a 3-digit number and a hyphen (e.g., `origin/001-feature`).
+2. **Local Folders:** List the contents of `$SPEC_DIR` (if it exists). Look for items starting with a 3-digit number and a hyphen.
 
-- `$SPEC_DIR` = `specs/` (always at project root)
-- Scan all items (directories or files) in `specs/` whose name starts with a zero-padded 3-digit number followed by a hyphen, then `$TARGET`, then another hyphen (e.g. `NNN-<$TARGET>-*` case-insensitive).
-- `$NEXT_NUM` = (count of those matching items) + 1
+Collect all unique numbers found from these sources.
 
-In both modes, format `$NEXT_NUM` as a zero-padded 3-digit string (e.g. `1` → `001`, `12` → `012`).
+### 4.2 — Calculate and Confirm Increment
+
+- `$SUGGESTED_NUM` = (highest number found + 1), formatted as a 3-digit zero-padded string (e.g., `1` → `001`, `12` → `012`).
+- If no numbers were found, `$SUGGESTED_NUM` = `001`.
+
+Use `vscode_askQuestions` to confirm the number or allow manual entry:
+
+```javascript
+vscode_askQuestions({
+  questions: [{
+    header: "next_num_choice",
+    question: "Confirm the spec number prefix:",
+    options: [
+      { label: "$SUGGESTED_NUM", description: "Auto-incremented (recommended)", recommended: true },
+      { label: "Enter manually", description: "Type a custom 3-digit prefix" }
+    ],
+    allowFreeformInput: false
+  }]
+})
+```
+
+- If the user selects "Enter manually", call `vscode_askQuestions` again to collect the number:
+```javascript
+vscode_askQuestions({
+  questions: [{
+    header: "manual_num",
+    question: "Enter the 3-digit prefix for this spec (e.g. 005):",
+  }]
+})
+```
+
+Store the final confirmed value as `$NEXT_NUM`.
 
 ---
 

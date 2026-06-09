@@ -6,6 +6,18 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and
 
 ## [Unreleased]
 
+## [1.7.0] — 2026-06-09
+
+### Added
+
+- Spec number prefix detection from both git remote branches and local folders.
+- Manual verification step for the auto-incremented prefix number.
+
+### Changed
+
+- Updated documentation to reflect support for any multi-site framework (not just Drupal).
+- Updated installation instructions to use the full path with repository link.
+
 ## [1.6.0] — 2026-06-05
 
 ### Added

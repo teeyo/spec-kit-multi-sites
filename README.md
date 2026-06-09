@@ -4,11 +4,11 @@ A [Spec Kit](https://github.github.io/spec-kit/) community extension that brings
 
 ## Overview
 
-In multi-site projects (Drupal, custom CMS, monorepos with multiple web apps) each website is an independent scope. This extension replaces the generic `/speckit.specify` step with a guided, site-aware flow that:
+In multi-site projects (Drupal, custom frameworks, monorepos with multiple web apps) each website is an independent scope. This extension replaces the generic `/speckit.specify` step with a guided, site-aware flow that:
 
-1. **Auto-detects** the sites folder from your project structure (e.g. `docroot/sites` for Drupal).
+1. **Auto-detects** the sites folder from your project structure (e.g. `docroot/sites` for Drupal, or generic `sites/` folders).
 2. **Asks which site** (or `core`) the spec belongs to, listing all detected websites.
-3. **Keeps auto-increment numbers separate per scope**, so each site (and core) starts at `001`.
+3. **Keeps auto-increment numbers separate per scope**, checking both local folders and remote git branches for the next available number.
 4. **Supports two spec organisation modes** with different file placement and naming strategies.
 
 ## Spec Modes
@@ -55,7 +55,7 @@ specs/
 ## Installation
 
 ```bash
-specify extension add spec-kit-multi-sites
+specify extension add spec-kit-multi-sites https://github.com/teeyo/spec-kit-multi-sites
 ```
 
 Or install from a local checkout during development:
